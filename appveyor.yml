@@ -76,9 +76,15 @@ on_success:
     }
     If ($Env:SHOULD_PUBLISH_NUGET_ARTIFACT -eq $False)
     {
+      Remove-Item -Recurse -Force (Join-Path $env:APPVEYOR_BUILD_FOLDER "LibGit2sharp/bin")
+      Remove-Item -Recurse -Force (Join-Path $env:APPVEYOR_BUILD_FOLDER "LibGit2sharp/obj")
+      Remove-Item -Recurse -Force (Join-Path $env:APPVEYOR_BUILD_FOLDER "LibGit2sharp.Tests/bin")
+      Remove-Item -Recurse -Force (Join-Path $env:APPVEYOR_BUILD_FOLDER "LibGit2sharp.Tests/obj")
+
+      & nuget install PublishCoverity -Version 0.9.0 -ExcludeVersion -Verbosity detailed -OutputDirectory .\packages
+
       Write-Host "Building project with Coverity..."
       & cov-build.exe --dir cov-int --encoding=UTF-8 msbuild $env:APPVEYOR_BUILD_FOLDER\LibGit2Sharp.sln /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-      & nuget install PublishCoverity -Version 0.9.0 -ExcludeVersion
       Write-Host "Compressing Coverity results..."
       ls .\packages
       ls $env:APPVEYOR_BUILD_FOLDER\packages
