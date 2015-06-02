@@ -62,18 +62,18 @@ build_script:
 - msbuild "%APPVEYOR_BUILD_FOLDER%\LibGit2Sharp.sln" /verbosity:normal /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /property:ExtraDefine="LEAKS_IDENTIFYING"
 
 test_script:
-- '%xunit_runner%  "%APPVEYOR_BUILD_FOLDER%\LibGit2Sharp.Tests\bin\Release\LibGit2Sharp.Tests.dll" /appveyor'
+- REM '%xunit_runner%  "%APPVEYOR_BUILD_FOLDER%\LibGit2Sharp.Tests\bin\Release\LibGit2Sharp.Tests.dll" /appveyor'
 - IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
 
 on_success:
 - ps: |
-    & "$env:APPVEYOR_BUILD_FOLDER\nuget.package\BuildNugetPackage.ps1" -commitSha "$env:APPVEYOR_REPO_COMMIT" -postBuild  { sourcelink index -pr LibGit2Sharp.csproj -pp Configuration Release -nf Core\NativeDllName.cs -nf Core\UniqueIdentifier.cs -nf Properties\AssemblyInfo.cs -r .. -u 'https://raw.githubusercontent.com/libgit2/libgit2sharp/{0}/%var2%' }
+    # & "$env:APPVEYOR_BUILD_FOLDER\nuget.package\BuildNugetPackage.ps1" -commitSha "$env:APPVEYOR_REPO_COMMIT" -postBuild  { sourcelink index -pr LibGit2Sharp.csproj -pp Configuration Release -nf Core\NativeDllName.cs -nf Core\UniqueIdentifier.cs -nf Properties\AssemblyInfo.cs -r .. -u 'https://raw.githubusercontent.com/libgit2/libgit2sharp/{0}/%var2%' }
     # Add-Type -Path "$env:APPVEYOR_BUILD_FOLDER\LibGit2Sharp\bin\Release\LibGit2Sharp.dll"
     # Write-Host "LibGit2Sharp version = $([LibGit2Sharp.GlobalSettings]::Version)" -ForegroundColor "Magenta"
-    If ($Env:SHOULD_PUBLISH_NUGET_ARTIFACT -eq $True)
-    {
-      Get-ChildItem "$env:APPVEYOR_BUILD_FOLDER\LibGit2sharp\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-    }
+    # If ($Env:SHOULD_PUBLISH_NUGET_ARTIFACT -eq $True)
+    # {
+    #   Get-ChildItem "$env:APPVEYOR_BUILD_FOLDER\LibGit2sharp\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+    # }
     If ($Env:SHOULD_PUBLISH_NUGET_ARTIFACT -eq $False)
     {
       Remove-Item -Recurse -Force (Join-Path $env:APPVEYOR_BUILD_FOLDER "LibGit2sharp/bin")
@@ -83,15 +83,15 @@ on_success:
 
       & nuget install PublishCoverity -Version 0.9.0 -ExcludeVersion -OutputDirectory .\packages
 
-      Write-Host "Building project with Coverity..."
+      Write-Host -ForegroundColor "Green" "Building project with Coverity..."
       & cov-build.exe --dir cov-int "C:\Program Files (x86)\MSBuild\12.0\bin\msbuild.exe" $env:APPVEYOR_BUILD_FOLDER\LibGit2Sharp.sln /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-      Write-Host "Compressing Coverity results..."
+      Write-Host -ForegroundColor "Green" "Compressing Coverity results..."
 
       & .\packages\PublishCoverity\PublishCoverity.exe compress `
         -i "$env:APPVEYOR_BUILD_FOLDER\cov-int" `
         -o "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
         --overwrite
-      Write-Host "Uploading Coverity results..."
+      Write-Host -ForegroundColor "Green" "Uploading Coverity results... $env:coverity_email"
       & .\packages\PublishCoverity\PublishCoverity.exe publish `
         -t "$env:coverity_token" `
         -e "$env:coverity_email" `
