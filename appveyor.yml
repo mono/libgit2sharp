@@ -10,6 +10,10 @@ skip_tags: true
 clone_folder: C:\projects\libgit2sharp
 
 environment:
+  coverity_token:
+    secure: nuzUT+HecXGIi3KaPd/1hgFEZJan/j6+oNbPV75JKjk=
+  coverity_email:
+    secure: eGVilNg1Yuq+Xj+SW8r3WCtjnzhoDV0sNJkma4NRq7A=
   version : 0.22.0
   matrix:
   - xunit_runner: xunit.console.clr4.exe
@@ -60,12 +64,6 @@ build_script:
 test_script:
 - REM '%xunit_runner%  "%APPVEYOR_BUILD_FOLDER%\LibGit2Sharp.Tests\bin\Release\LibGit2Sharp.Tests.dll" /appveyor'
 - IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
-
-environment:
-  coverity_token:
-    secure: nuzUT+HecXGIi3KaPd/1hgFEZJan/j6+oNbPV75JKjk=
-  coverity_email:
-    secure: eGVilNg1Yuq+Xj+SW8r3WCtjnzhoDV0sNJkma4NRq7A=
 
 on_success:
 - ps: |
