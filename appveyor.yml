@@ -16,6 +16,10 @@ environment:
     Arch: 64
   - xunit_runner: xunit.console.clr4.x86.exe
     Arch: 32
+  coverity_token:
+      secure: nuzUT+HecXGIi3KaPd/1hgFEZJan/j6+oNbPV75JKjk=
+  coverity_email:
+      secure: eGVilNg1Yuq+Xj+SW8r3WCtjnzhoDV0sNJkma4NRq7A=
 
 matrix:
   fast_finish: true
@@ -70,6 +74,28 @@ on_success:
     {
       Get-ChildItem "$env:APPVEYOR_BUILD_FOLDER\LibGit2sharp\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
     }
+    If ($Env:SHOULD_PUBLISH_NUGET_ARTIFACT -eq $False)
+    {
+      Write-Host "Building project with Coverity..."
+      & cov-build.exe --dir cov-int --encoding=UTF-8 msbuild $env:APPVEYOR_BUILD_FOLDER%\LibGit2Sharp.sln /p:Configuration=Release /logger:C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll
+      & nuget install PublishCoverity -Version 0.9.0 -ExcludeVersion
+      Write-Host "Compressing Coverity results..."
+      & packages\PublishCoverity.exe compress `
+        -i "$env:APPVEYOR_BUILD_FOLDER\cov-int" `
+        -o "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
+        --overwrite
+      Write-Host "Uploading Coverity results..."
+      & packages\PublishCoverity.exe publish `
+        -t "$env:coverity_token" `
+        -e "$env:coverity_email" `
+        -r "$env:APPVEYOR_REPO_NAME" `
+        -z "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
+        -d "CI server scheduled build." `
+        --codeVersion "$Env:ASSEMBLY_INFORMATIONAL_VERSION"
+    }
+
+artifacts:
+- path: cov-int\build-log.txt
 
 notifications:
 - provider: Email
