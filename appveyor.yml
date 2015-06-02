@@ -77,15 +77,15 @@ on_success:
     If ($Env:SHOULD_PUBLISH_NUGET_ARTIFACT -eq $False)
     {
       Write-Host "Building project with Coverity..."
-      & cov-build.exe --dir cov-int --encoding=UTF-8 msbuild $env:APPVEYOR_BUILD_FOLDER%\LibGit2Sharp.sln /p:Configuration=Release /logger:C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll
+      & cov-build.exe --dir cov-int --encoding=UTF-8 msbuild $env:APPVEYOR_BUILD_FOLDER\LibGit2Sharp.sln /p:Configuration=Release /logger:C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll
       & nuget install PublishCoverity -Version 0.9.0 -ExcludeVersion
       Write-Host "Compressing Coverity results..."
-      & packages\PublishCoverity.exe compress `
+      & .\packages\PublishCoverity.exe compress `
         -i "$env:APPVEYOR_BUILD_FOLDER\cov-int" `
         -o "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
         --overwrite
       Write-Host "Uploading Coverity results..."
-      & packages\PublishCoverity.exe publish `
+      & .\packages\PublishCoverity.exe publish `
         -t "$env:coverity_token" `
         -e "$env:coverity_email" `
         -r "$env:APPVEYOR_REPO_NAME" `
