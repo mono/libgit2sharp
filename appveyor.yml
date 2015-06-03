@@ -108,6 +108,13 @@ on_success:
     }
 
 artifacts:
+- path: CHANGES.md
+  name: changes.zip
+  type: zip
+
+- path: CHANGES.md
+  name: changes
+
 - path: libgit2sharp.zip
   name: coverity.analysis.results
 
