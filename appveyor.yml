@@ -91,6 +91,8 @@ on_success:
         -i "$env:APPVEYOR_BUILD_FOLDER\cov-int" `
         -o "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
         --overwrite
+
+      ls
       # Write-Host -ForegroundColor "Green" "Uploading Coverity results... $env:coverity_email"
       # & .\packages\PublishCoverity\PublishCoverity.exe publish `
       #   -t "$env:coverity_token" `
@@ -106,7 +108,7 @@ artifacts:
   name: coverity.build.logger
 
 - path: LibGit2Sharp.zip
-  name: coverity.analysis
+  name: coverity.analysis.results
 
 notifications:
 - provider: Email
