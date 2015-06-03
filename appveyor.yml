@@ -59,7 +59,7 @@ before_build:
 - nuget restore "%APPVEYOR_BUILD_FOLDER%\LibGit2Sharp.sln"
 
 build_script:
-- msbuild "%APPVEYOR_BUILD_FOLDER%\LibGit2Sharp.sln" /verbosity:normal /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /property:ExtraDefine="LEAKS_IDENTIFYING"
+- cov-build.exe --dir cov-int msbuild "%APPVEYOR_BUILD_FOLDER%\LibGit2Sharp.sln" /verbosity:normal /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /property:ExtraDefine="LEAKS_IDENTIFYING"
 
 test_script:
 - REM '%xunit_runner%  "%APPVEYOR_BUILD_FOLDER%\LibGit2Sharp.Tests\bin\Release\LibGit2Sharp.Tests.dll" /appveyor'
@@ -83,26 +83,30 @@ on_success:
 
       & nuget install PublishCoverity -Version 0.9.0 -ExcludeVersion -OutputDirectory .\packages
 
-      Write-Host -ForegroundColor "Green" "Building project with Coverity..."
-      & cov-build.exe --dir cov-int "C:\Program Files (x86)\MSBuild\12.0\bin\msbuild.exe" $env:APPVEYOR_BUILD_FOLDER\LibGit2Sharp.sln /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+      # Write-Host -ForegroundColor "Green" "Building project with Coverity..."
+      # & cov-build.exe --dir cov-int "C:\Program Files (x86)\MSBuild\12.0\bin\msbuild.exe" $env:APPVEYOR_BUILD_FOLDER\LibGit2Sharp.sln /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
       Write-Host -ForegroundColor "Green" "Compressing Coverity results..."
 
       & .\packages\PublishCoverity\PublishCoverity.exe compress `
         -i "$env:APPVEYOR_BUILD_FOLDER\cov-int" `
         -o "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
         --overwrite
-      Write-Host -ForegroundColor "Green" "Uploading Coverity results... $env:coverity_email"
-      & .\packages\PublishCoverity\PublishCoverity.exe publish `
-        -t "$env:coverity_token" `
-        -e "$env:coverity_email" `
-        -r "$env:APPVEYOR_REPO_NAME" `
-        -z "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
-        -d "CI server scheduled build." `
-        --codeVersion "$Env:ASSEMBLY_INFORMATIONAL_VERSION"
+      # Write-Host -ForegroundColor "Green" "Uploading Coverity results... $env:coverity_email"
+      # & .\packages\PublishCoverity\PublishCoverity.exe publish `
+      #   -t "$env:coverity_token" `
+      #   -e "$env:coverity_email" `
+      #   -r "$env:APPVEYOR_REPO_NAME" `
+      #   -z "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
+      #   -d "CI server scheduled build." `
+      #   --codeVersion "$Env:ASSEMBLY_INFORMATIONAL_VERSION"
     }
 
 artifacts:
 - path: cov-int\build-log.txt
+  name: coverity.build.logger
+
+- path: cov-int\LibGit2Sharp.zip
+  name: coverity.analysis
 
 notifications:
 - provider: Email
