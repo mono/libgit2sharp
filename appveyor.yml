@@ -105,7 +105,7 @@ artifacts:
 - path: cov-int\build-log.txt
   name: coverity.build.logger
 
-- path: cov-int\LibGit2Sharp.zip
+- path: LibGit2Sharp.zip
   name: coverity.analysis
 
 notifications:
