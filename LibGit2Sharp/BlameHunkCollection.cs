@@ -28,10 +28,20 @@ namespace LibGit2Sharp
             var rawopts = new git_blame_options
             {
                 version = 1,
+                FindOptions = new GitDiffFindOptions {
+                    Version = 1,
+                },
                 flags = options.Strategy.ToGitBlameOptionFlags(),
                 min_line = new UIntPtr((uint)options.MinLine),
                 max_line = new UIntPtr((uint)options.MaxLine),
             };
+
+            if (options.FindNoRenames)
+                rawopts.FindOptions.Flags = GitDiffFindFlags.GIT_DIFF_FIND_NO_RENAMES;
+            else if (options.FindExactRenames)
+                rawopts.FindOptions.Flags = GitDiffFindFlags.GIT_DIFF_FIND_EXACT_MATCH_ONLY;
+            else
+                rawopts.FindOptions.Flags = GitDiffFindFlags.GIT_DIFF_FIND_RENAMES;
 
             if (options.StartingAt != null)
             {

@@ -44,6 +44,7 @@ namespace LibGit2Sharp.Core
     internal class git_blame_options
     {
         public uint version = 1;
+        public GitDiffFindOptions FindOptions;
         public GitBlameOptionFlags flags;
 
         public UInt16 min_match_characters;
