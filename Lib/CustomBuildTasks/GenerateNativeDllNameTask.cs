@@ -14,25 +14,27 @@ namespace CustomBuildTasks
         public override bool Execute()
         {
             var fileName = InputHashFile.GetMetadata("FullPath");
-            string libgit2FileName;
+            string hash;
 
             using (var sr = new StreamReader(fileName))
             {
-                libgit2FileName = sr.ReadLine();
+                hash = sr.ReadLine();
             }
+
+            var shortHash = hash.Substring(0, 7);
 
             var nativeDllName = @"namespace LibGit2Sharp.Core
 {{
     internal static class NativeDllName
     {{
-        public const string Name = ""{0}"";
+        public const string Name = ""git2-{0}"";
     }}
 }}
 ";
 
             using (var sw = new StreamWriter(OutputFile))
             {
-                sw.Write(nativeDllName, libgit2FileName);
+                sw.Write(nativeDllName, shortHash);
             }
 
             return true;
