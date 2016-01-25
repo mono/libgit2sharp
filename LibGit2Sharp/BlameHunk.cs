@@ -29,11 +29,11 @@ namespace LibGit2Sharp
             {
                 InitialPath = LaxUtf8Marshaler.FromNative(rawHunk.OrigPath);
             }
-            LineCount = rawHunk.LinesInHunk;
+			LineCount = (int)rawHunk.LinesInHunk;
 
             // Libgit2's line numbers are 1-based
-            FinalStartLineNumber = rawHunk.FinalStartLineNumber - 1;
-            InitialStartLineNumber = rawHunk.OrigStartLineNumber - 1;
+			FinalStartLineNumber = (int)rawHunk.FinalStartLineNumber - 1;
+			InitialStartLineNumber = (int)rawHunk.OrigStartLineNumber - 1;
 
             // Signature objects need to have ownership of their native pointers
             if (rawHunk.FinalSignature != IntPtr.Zero)

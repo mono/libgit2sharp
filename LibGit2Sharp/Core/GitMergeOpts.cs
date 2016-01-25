@@ -27,6 +27,8 @@ namespace LibGit2Sharp.Core
         /// </summary>
         public IntPtr SimilarityMetric;
 
+		public uint RecursionLimit;
+
         /// <summary>
         /// Flags for automerging content.
         /// </summary>

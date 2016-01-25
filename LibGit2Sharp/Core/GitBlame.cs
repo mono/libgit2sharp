@@ -49,22 +49,22 @@ namespace LibGit2Sharp.Core
         public UInt16 MinMatchCharacters;
         public GitOid NewestCommit;
         public GitOid OldestCommit;
-        public uint MinLine;
-        public uint MaxLine;
+		public IntPtr MinLine;
+		public IntPtr MaxLine;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     internal class GitBlameHunk
     {
-        public ushort LinesInHunk;
+		public IntPtr LinesInHunk;
 
         public GitOid FinalCommitId;
-        public ushort FinalStartLineNumber;
+		public IntPtr FinalStartLineNumber;
         public IntPtr FinalSignature;
 
         public GitOid OrigCommitId;
         public IntPtr OrigPath;
-        public ushort OrigStartLineNumber;
+		public IntPtr OrigStartLineNumber;
         public IntPtr OrigSignature;
 
         public byte Boundary;
