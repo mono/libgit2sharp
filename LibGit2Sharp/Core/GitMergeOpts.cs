@@ -26,7 +26,7 @@ namespace LibGit2Sharp.Core
         /// to use internal metric.
         /// </summary>
         public IntPtr SimilarityMetric;
-
+		
 		public uint RecursionLimit;
 
         /// <summary>
