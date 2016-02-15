@@ -196,7 +196,7 @@ namespace LibGit2Sharp.Core
         IntPtr delta_to_add,
         IntPtr matched_pathspec,
         IntPtr payload);
-
+	
 	internal delegate int diff_progress_cb (
 		IntPtr diff_so_far,
 		IntPtr old_path,
