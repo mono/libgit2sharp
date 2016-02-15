@@ -21,39 +21,43 @@ namespace LibGit2Sharp
         /// </summary>
         Revert = 2,
 
+		RevertSequence = 3,
+
         /// <summary>
         /// A cherry-pick is in progress.
         /// </summary>
-        CherryPick = 3,
+        CherryPick = 4,
+
+		CherryPickSequence = 5,
 
         /// <summary>
         /// A bisect is in progress.
         /// </summary>
-        Bisect = 4,
+        Bisect = 6,
 
         /// <summary>
         /// A rebase is in progress.
         /// </summary>
-        Rebase = 5,
+        Rebase = 7,
 
         /// <summary>
         /// A rebase --interactive is in progress.
         /// </summary>
-        RebaseInteractive = 6,
+        RebaseInteractive = 8,
 
         /// <summary>
         /// A rebase --merge is in progress.
         /// </summary>
-        RebaseMerge = 7,
+        RebaseMerge = 9,
 
         /// <summary>
         /// A mailbox application (am) is in progress.
         /// </summary>
-        ApplyMailbox = 8,
+        ApplyMailbox = 10,
 
         /// <summary>
         /// A mailbox application (am) or rebase is in progress.
         /// </summary>
-        ApplyMailboxOrRebase = 9,
+        ApplyMailboxOrRebase = 11,
     }
 }
