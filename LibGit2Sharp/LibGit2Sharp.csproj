@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\..\..\MonoDevelop.props" Condition="Exists('..\..\..\MonoDevelop.props')" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
