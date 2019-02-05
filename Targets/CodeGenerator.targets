@@ -40,6 +40,15 @@
 
   <Target Name="AddNativeDllCommitShaToBuildMetadata" BeforeTargets="GetBuildVersion">
 
+    <ReadLinesFromFile File="$(MSBuildThisFileDirectory)..\..\libgit-binary\libgit2_hash.txt"
+                       Condition="Exists('$(MSBuildThisFileDirectory)..\..\libgit-binary\libgit2_hash.txt')">
+        <Output TaskParameter="Lines" PropertyName="libgit2_hash" />
+    </ReadLinesFromFile>
+
+    <PropertyGroup Condition="Exists('$(MSBuildThisFileDirectory)..\..\libgit-binary\libgit2_hash.txt')">
+      <libgit2_filename>libgit2-$(libgit2_hash.Substring(0,7))</libgit2_filename>
+    </PropertyGroup>
+
     <ItemGroup>
       <BuildMetadata Include="libgit2-$(libgit2_hash.Substring(0,7))" />
     </ItemGroup>
@@ -47,7 +56,7 @@
   </Target>
 
 
-  <Target Name="GenerateAssemblyCommitIdsCs" Inputs="$(libgit2_propsfile);$(VersionSourceFile)" Outputs="$(AssemblyCommitIdsPath)" BeforeTargets="CoreCompile" AfterTargets="GenerateAssemblyVersionInfo" DependsOnTargets="DefineProperties">
+  <Target Name="GenerateAssemblyCommitIdsCs" Inputs="$(libgit2_hash);$(VersionSourceFile)" Outputs="$(AssemblyCommitIdsPath)" BeforeTargets="CoreCompile" AfterTargets="GenerateAssemblyVersionInfo" DependsOnTargets="DefineProperties">
 
     <PropertyGroup>
       <LibGit2SharpCommitSha>unknown</LibGit2SharpCommitSha>

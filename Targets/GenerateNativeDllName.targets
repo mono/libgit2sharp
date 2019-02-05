@@ -10,7 +10,7 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="GenerateNativeDllNameCs" Inputs="$(libgit2_propsfile)" Outputs="$(NativeDllNamePath)" BeforeTargets="CoreCompile" DependsOnTargets="DefineNativeDllName">
+  <Target Name="GenerateNativeDllNameCs" Inputs="$(libgit2_filename)" Outputs="$(NativeDllNamePath)" BeforeTargets="CoreCompile" DependsOnTargets="DefineNativeDllName">
     <PropertyGroup>
       <NativeDllNameSourceLines>
         namespace LibGit2Sharp.Core
