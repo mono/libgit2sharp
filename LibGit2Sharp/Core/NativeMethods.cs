@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using LibGit2Sharp.Core.Handles;
 
@@ -51,7 +52,7 @@ namespace LibGit2Sharp.Core
         }
 
         // Shutdown the native library in a finalizer.
-        private sealed class NativeShutdownObject
+        private sealed class NativeShutdownObject : CriticalFinalizerObject
         {
             ~NativeShutdownObject()
             {
