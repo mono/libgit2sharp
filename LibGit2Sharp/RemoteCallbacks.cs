@@ -305,7 +305,7 @@ namespace LibGit2Sharp
             }
             catch (Exception exception)
             {
-                Proxy.git_error_set_str(GitErrorCategory.Callback, exception);
+                Proxy.giterr_set_str(GitErrorCategory.Callback, exception);
                 return (int)GitErrorCode.Error;
             }
         }
@@ -332,7 +332,7 @@ namespace LibGit2Sharp
             }
             catch (Exception exception)
             {
-                Proxy.git_error_set_str(GitErrorCategory.Callback, exception);
+                Proxy.giterr_set_str(GitErrorCategory.Callback, exception);
             }
 
             return Proxy.ConvertResultToCancelFlag(result);
@@ -373,7 +373,7 @@ namespace LibGit2Sharp
             catch (Exception exception)
             {
                 Log.Write(LogLevel.Error, exception.ToString());
-                Proxy.git_error_set_str(GitErrorCategory.Callback, exception);
+                Proxy.giterr_set_str(GitErrorCategory.Callback, exception);
                 result = false;
             }
 
