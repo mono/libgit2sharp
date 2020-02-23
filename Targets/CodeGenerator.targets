@@ -38,7 +38,7 @@
   </Target>
 
 
-  <Target Name="AddNativeDllCommitShaToBuildMetadata" BeforeTargets="GetBuildVersion">
+  <Target Name="AddNativeDllCommitShaToBuildMetadata" Inputs="$(MSBuildThisFileDirectory)..\..\libgit-binary\libgit2_hash.txt" Outputs="$(IntermediateOutputPath)libgit2_hash.txt" BeforeTargets="GetBuildVersion">
 
     <ReadLinesFromFile File="$(MSBuildThisFileDirectory)..\..\libgit-binary\libgit2_hash.txt"
                        Condition="Exists('$(MSBuildThisFileDirectory)..\..\libgit-binary\libgit2_hash.txt')">
@@ -53,6 +53,7 @@
       <BuildMetadata Include="libgit2-$(libgit2_hash.Substring(0,7))" />
     </ItemGroup>
 
+    <WriteLinesToFile File="$(IntermediateOutputPath)libgit2_hash.txt" Lines="@(BuildMetadata)" WriteOnlyWhenDifferent="True" />
   </Target>
 
 
