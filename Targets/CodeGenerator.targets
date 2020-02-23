@@ -28,7 +28,7 @@
       </UniqueIdSourceLines>
     </PropertyGroup>
 
-    <WriteLinesToFile File="$(UniqueIdentifierPath)" Lines="$(UniqueIdSourceLines)" Overwrite="true" />
+    <WriteLinesToFile File="$(UniqueIdentifierPath)" Lines="$(UniqueIdSourceLines)" Overwrite="True" WriteOnlyWhenDifferent="true" />
 
     <ItemGroup>
       <Compile Include="$(UniqueIdentifierPath)" />
@@ -38,7 +38,7 @@
   </Target>
 
 
-  <Target Name="AddNativeDllCommitShaToBuildMetadata" Inputs="$(MSBuildThisFileDirectory)..\..\libgit-binary\libgit2_hash.txt" Outputs="$(IntermediateOutputPath)libgit2_hash.txt" BeforeTargets="GetBuildVersion">
+  <Target Name="AddNativeDllCommitShaToBuildMetadata" Inputs="$(MSBuildThisFileDirectory)..\..\libgit-binary\libgit2_hash.txt" Outputs="$(IntermediateOutputPath)$(libgit2_filename).stamp" BeforeTargets="GetBuildVersion">
 
     <ReadLinesFromFile File="$(MSBuildThisFileDirectory)..\..\libgit-binary\libgit2_hash.txt"
                        Condition="Exists('$(MSBuildThisFileDirectory)..\..\libgit-binary\libgit2_hash.txt')">
@@ -53,11 +53,11 @@
       <BuildMetadata Include="libgit2-$(libgit2_hash.Substring(0,7))" />
     </ItemGroup>
 
-    <WriteLinesToFile File="$(IntermediateOutputPath)libgit2_hash.txt" Lines="@(BuildMetadata)" WriteOnlyWhenDifferent="True" />
+    <WriteLinesToFile File="$(IntermediateOutputPath)$(libgit2_filename).stamp" Lines="@(BuildMetadata)" Overwrite="true" WriteOnlyWhenDifferent="True" />
   </Target>
 
 
-  <Target Name="GenerateAssemblyCommitIdsCs" Inputs="$(libgit2_hash);$(VersionSourceFile)" Outputs="$(AssemblyCommitIdsPath)" BeforeTargets="CoreCompile" AfterTargets="GenerateAssemblyVersionInfo" DependsOnTargets="DefineProperties">
+  <Target Name="GenerateAssemblyCommitIdsCs" Inputs="$(libgit2_filename);$(VersionSourceFile)" Outputs="$(AssemblyCommitIdsPath)" BeforeTargets="CoreCompile" AfterTargets="GenerateAssemblyVersionInfo" DependsOnTargets="DefineProperties">
 
     <PropertyGroup>
       <LibGit2SharpCommitSha>unknown</LibGit2SharpCommitSha>
@@ -74,7 +74,7 @@
       </AssemblyCommitIdsSourceLines>
     </PropertyGroup>
 
-    <WriteLinesToFile File="$(AssemblyCommitIdsPath)" Lines="$(AssemblyCommitIdsSourceLines)" Overwrite="true" />
+    <WriteLinesToFile File="$(AssemblyCommitIdsPath)" Lines="$(AssemblyCommitIdsSourceLines)" Overwrite="true" WriteOnlyWhenDifferent="true" />
 
     <ItemGroup>
       <Compile Include="$(AssemblyCommitIdsPath)" />
