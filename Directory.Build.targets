@@ -4,4 +4,9 @@
     <PublicSign Condition=" '$(AssemblyOriginatorKeyFile)' != '' and '$(OS)' != 'Windows_NT' ">true</PublicSign>
   </PropertyGroup>
 
+  <!-- Turn off NerdBank.GitVersioning for VS-Platform builds inside VSMac.
+  We don't want each project to set the build variables, causing problems during parallel builds. -->
+  <Target Name="SetCloudBuildVersionVars" />
+  <Target Name="SetCloudBuildNumberWithVersion" />
+
 </Project>
